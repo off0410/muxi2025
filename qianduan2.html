@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>依然是第一个网页</title>
+</head>
+<body>
+<form action="/submit" method="post">
+
+  <div>
+    <label for="avatar">头像</label>
+    <input type="file" id="avatar" name="avatar">
+    <p>未选择任何文件</p>
+  </div>
+
+
+  <div>
+    <label for="nickname">昵称</label>
+    <input type="text" id="nickname" name="nickname" required>
+  </div>
+
+
+  <div>
+    <label for="education">学历</label>
+    <select id="education" name="education">
+      <option value="college" selected>大专</option>
+      <option value="bachelor">本科</option>
+    </select>
+  </div>
+
+
+  <div>
+    <label>性别</label>
+    <input type="radio" id="male" name="gender" value="male" checked>
+    <label for="male">男</label>
+  </div>
+
+
+  <div>
+    <label>爱好</label>
+    <div>
+      <input type="checkbox" id="movie" name="hobbies" value="movie">
+      <label for="movie">电影</label>
+    </div>
+    <div>
+      <input type="checkbox" id="photography" name="hobbies" value="photography">
+      <label for="photography">摄影</label>
+    </div>
+    <div>
+      <input type="checkbox" id="music" name="hobbies" value="music">
+      <label for="music">音乐</label>
+    </div>
+    <div>
+      <input type="checkbox" id="reading" name="hobbies" value="reading">
+      <label for="reading">阅读</label>
+    </div>
+  </div>
+
+
+  <div>
+    <label for="signature">签名</label>
+    <textarea id="signature" name="signature" rows="3"></textarea>
+  </div>
+
+
+  <button type="submit">保存</button>
+</form>
+</body>
