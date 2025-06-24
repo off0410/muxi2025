@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1.</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #page {
+            padding: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        #header {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        #sidebar2 {
+            float: left;
+            width: 200px;
+            background-color: #9b59b6;
+            color: white;
+            padding: 15px;
+            margin-right: 15px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        #sidebar {
+            float: right;
+            width: 200px;
+            background-color: #2ecc71;
+            color: white;
+            padding: 15px;
+            margin-left: 15px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        #content {
+            float: left;
+            width: calc(100% - 430px); /* 总宽度减去两侧边栏宽度和间距 */
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            line-height: 1.6;
+        }
+
+        #footer {
+            clear: both;
+            background-color: #34495e;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            #sidebar2, #content, #sidebar {
+                float: none;
+                width: 100%;
+                margin: 0 0 15px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="page">
+        <div id="header"><h1>这里是标题</h1></div>
+        <div id="sidebar">
+            <p>侧边栏1</p>
+        </div>
+        <div id="sidebar2">
+            <p>侧边栏2</p>
+        </div>
+        <div id="content">
+            <p>这里是一些文字</p>
+            <p>再来一大段文字</p>
+            <p>地图投影</p>
+        </div>
+        <div id="footer"><p>没人关注的页脚</p></div>
+    </div>
+</body>
+</html>

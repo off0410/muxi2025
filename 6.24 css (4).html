@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4.</title>
+    <style>
+        /* 公共样式 */
+        .layout-container {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px dashed #999;
+        }
+
+        /* 方案1：两边自适应，中间定宽 */
+        .flex-layout1 {
+            display: flex;
+        }
+
+        .flex-side1 {
+            flex: 1; /* 两侧自适应 */
+            background-color: #3498db;
+            height: 100px;
+        }
+
+        .flex-center1 {
+            width: 300px; /* 中间定宽 */
+            background-color: #e74c3c;
+            margin: 0 10px; /* 间隔 */
+            height: 100px;
+        }
+
+        /* 方案2：两边定宽，中间自适应 */
+        .flex-layout2 {
+            display: flex;
+        }
+
+        .flex-side2 {
+            width: 200px; /* 两侧定宽 */
+            background-color: #2ecc71;
+            height: 100px;
+        }
+
+        .flex-center2 {
+            flex: 1; /* 中间自适应 */
+            background-color: #9b59b6;
+            margin: 0 10px; /* 间隔 */
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="layout-container">
+        <h3>两边自适应，中间定宽</h3>
+        <div class="flex-layout1">
+            <div class="flex-side1"></div>
+            <div class="flex-center1"></div>
+            <div class="flex-side1"></div>
+        </div>
+    </div>
+
+    <div class="layout-container">
+        <h3>两边定宽，中间自适应</h3>
+        <div class="flex-layout2">
+            <div class="flex-side2"></div>
+            <div class="flex-center2"></div>
+            <div class="flex-side2"></div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3.</title>
+    <style>
+        body {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+
+        .rectangle {
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            background-color: #CCC;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* 垂直水平居中 */
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* 左上角扇形 */
+        .fan-top-left {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: #fc0;
+            border-radius: 0 60px 60px 0;
+            top: 0;
+            left: 0;
+        }
+
+        /* 右下角扇形 */
+        .fan-bottom-right {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: #fc0;
+            border-radius: 60px 0 0 60px;
+            bottom: 0;
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="rectangle">
+        <div class="fan-top-left"></div>
+        <div class="fan-bottom-right"></div>
+    </div>
+</body>
+</html>
