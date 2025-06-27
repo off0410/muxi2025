@@ -1,0 +1,151 @@
+basePath: /
+definitions:
+  main.Book:
+    properties:
+      author:
+        type: string
+      id:
+        type: string
+      stock:
+        description: 修改为int类型更合理
+        type: integer
+      title:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: 实现对图书的增删改查的图书管理系统
+  title: 图书管理系统
+  version: "1.0"
+paths:
+  /books:
+    get:
+      consumes:
+      - application/json
+      description: 获取库存中所有图书列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            items:
+              $ref: '#/definitions/main.Book'
+            type: array
+      summary: 获取图书列表
+      tags:
+      - 图书查询
+    post:
+      consumes:
+      - application/json
+      description: 添加一本新书到库存
+      parameters:
+      - description: 图书信息
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/main.Book'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: 添加成功
+          schema:
+            $ref: '#/definitions/main.Book'
+        "400":
+          description: 请求参数错误
+          schema:
+            type: object
+        "409":
+          description: ID已存在
+          schema:
+            type: object
+      summary: 添加新书
+      tags:
+      - 图书管理
+  /books/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 根据ID删除图书
+      parameters:
+      - description: 图书ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            type: object
+        "404":
+          description: 图书不存在
+          schema:
+            type: object
+      summary: 删除图书
+      tags:
+      - 图书管理
+    get:
+      consumes:
+      - application/json
+      description: 根据ID获取图书详细信息
+      parameters:
+      - description: 图书ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            $ref: '#/definitions/main.Book'
+        "404":
+          description: 图书不存在
+          schema:
+            type: object
+      summary: 获取图书详情
+      tags:
+      - 图书查询
+    put:
+      consumes:
+      - application/json
+      description: 更新指定ID的图书信息
+      parameters:
+      - description: 图书ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 更新后的图书信息
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/main.Book'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/main.Book'
+        "400":
+          description: 请求参数错误
+          schema:
+            type: object
+        "404":
+          description: 图书不存在
+          schema:
+            type: object
+      summary: 更新图书
+      tags:
+      - 图书管理
+swagger: "2.0"
