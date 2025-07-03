@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  book-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: book-manager
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    environment:
+      - GIN_MODE=release
+    networks:
+      - book-network
+
+networks:
+  book-network:
+    driver: bridge
