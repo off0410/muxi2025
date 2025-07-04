@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书管理系统</title>
+</head>
+<body>
+<h1>图书管理系统</h1>
+<script src="book-management.js"></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#64748b',
+                        success: '#10b981',
+                        danger: '#ef4444',
+                        warning: '#f59e0b',
+                        info: '#06b6d4',
+                        light: '#f8fafc',
+                        dark: '#1e293b'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .card-shadow {
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            }
+            .btn-hover {
+                @apply transition-all duration-300 transform hover:scale-105;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <header class="mb-10">
+        <h1 class="text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-dark flex items-center">
+            <i class="fa fa-book text-primary mr-3"></i>图书管理系统
+        </h1>
+        <p class="text-gray-600 mt-2">一个简单的图书管理应用，支持图书的增删改查操作</p>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- 图书列表区域 -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white rounded-xl p-6 card-shadow">
+                <h2 class="text-xl font-bold text-dark mb-4 flex items-center">
+                    <i class="fa fa-list-ul text-primary mr-2"></i>图书列表
+                </h2>
+                <div class="flex justify-between items-center mb-4">
+                    <div class="relative">
+                        <input type="text" id="searchInput" placeholder="搜索图书..."
+                               class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all">
+                        <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    <button id="getBooksButton" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg flex items-center btn-hover">
+                        <i class="fa fa-refresh mr-2"></i>刷新列表
+                    </button>
+                </div>
+                <div id="bookList" class="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+                    <!-- 图书列表将在这里动态生成 -->
+                    <div class="text-gray-500 text-center py-10">
+                        <i class="fa fa-book text-gray-300 text-4xl mb-3"></i>
+                        <p>点击刷新按钮加载图书列表</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 图书详情区域 -->
+            <div class="bg-white rounded-xl p-6 card-shadow" id="detailCard" style="display: none;">
+                <h2 class="text-xl font-bold text-dark mb-4 flex items-center">
+                    <i class="fa fa-info-circle text-primary mr-2"></i>图书详情
+                    <button id="closeDetailBtn" class="ml-auto text-gray-400 hover:text-gray-600">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </h2>
+                <div id="bookDetail" class="space-y-4">
+                    <!-- 图书详情将在这里动态生成 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 操作区域 -->
+        <div class="space-y-6">
+            <!-- 添加图书区域 -->
+            <div class="bg-white rounded-xl p-6 card-shadow">
+                <h2 class="text-xl font-bold text-dark mb-4 flex items-center">
+                    <i class="fa fa-plus-circle text-success mr-2"></i>添加新书
+                </h2>
+                <form id="addBookForm" class="space-y-4">
+                    <div>
+                        <label for="newBookId" class="block text-sm font-medium text-gray-700 mb-1">图书ID</label>
+                        <input type="text" id="newBookId" placeholder="输入图书ID"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all">
+                    </div>
+                    <div>
+                        <label for="newBookTitle" class="block text-sm font-medium text-gray-700 mb-1">图书标题</label>
+                        <input type="text" id="newBookTitle" placeholder="输入图书标题"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all">
+                    </div>
+                    <div>
+                        <label for="newBookAuthor" class="block text-sm font-medium text-gray-700 mb-1">图书作者</label>
+                        <input type="text" id="newBookAuthor" placeholder="输入图书作者"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all">
+                    </div>
+                    <div>
+                        <label for="newBookStock" class="block text-sm font-medium text-gray-700 mb-1">图书库存</label>
+                        <input type="number" id="newBookStock" placeholder="输入图书库存" min="0"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all">
+                    </div>
+                    <button type="submit" class="w-full bg-success hover:bg-success/90 text-white px-4 py-2 rounded-lg flex items-center justify-center btn-hover">
+                        <i class="fa fa-save mr-2"></i>添加图书
+                    </button>
+                </form>
+                <div id="addBookResult" class="mt-3 text-sm"></div>
+            </div>
+
+            <!-- 更新/删除图书区域 -->
+            <div class="bg-white rounded-xl p-6 card-shadow">
+                <h2 class="text-xl font-bold text-dark mb-4 flex items-center">
+                    <i class="fa fa-edit text-warning mr-2"></i>管理图书
+                </h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="bookIdForManage" class="block text-sm font-medium text-gray-700 mb-1">图书ID</label>
+                        <div class="flex">
+                            <input type="text" id="bookIdForManage" placeholder="输入要管理的图书ID"
+                                   class="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all">
+                            <button id="loadBookForManageBtn" class="bg-info hover:bg-info/90 text-white px-4 py-2 rounded-r-lg flex items-center btn-hover">
+                                <i class="fa fa-search mr-1"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="manageBookForm" class="space-y-4" style="display: none;">
+                        <div>
+                            <label for="manageBookTitle" class="block text-sm font-medium text-gray-700 mb-1">图书标题</label>
+                            <input type="text" id="manageBookTitle" placeholder="输入图书标题"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all">
+                        </div>
+                        <div>
+                            <label for="manageBookAuthor" class="block text-sm font-medium text-gray-700 mb-1">图书作者</label>
+                            <input type="text" id="manageBookAuthor" placeholder="输入图书作者"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all">
+                        </div>
+                        <div>
+                            <label for="manageBookStock" class="block text-sm font-medium text-gray-700 mb-1">图书库存</label>
+                            <input type="number" id="manageBookStock" placeholder="输入图书库存" min="0"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button id="updateBookButton" class="bg-warning hover:bg-warning/90 text-white px-4 py-2 rounded-lg flex items-center justify-center btn-hover">
+                                <i class="fa fa-refresh mr-2"></i>更新
+                            </button>
+                            <button id="deleteBookButton" class="bg-danger hover:bg-danger/90 text-white px-4 py-2 rounded-lg flex items-center justify-center btn-hover">
+                                <i class="fa fa-trash mr-2"></i>删除
+                            </button>
+                        </div>
+                    </div>
+                    <div id="manageBookResult" class="mt-3 text-sm"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载中遮罩 -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg flex items-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mr-4"></div>
+            <span class="text-lg font-medium">加载中...</span>
+        </div>
+    </div>
+
+    <!-- 通知消息 -->
+    <div id="notification" class="fixed top-4 right-4 max-w-sm bg-white rounded-lg shadow-lg p-4 transform transition-all duration-500 translate-x-full opacity-0 z-50 flex items-center">
+        <i id="notificationIcon" class="fa fa-info-circle text-info mr-3 text-xl"></i>
+        <div>
+            <h3 id="notificationTitle" class="font-medium text-gray-900"></h3>
+            <p id="notificationMessage" class="text-sm text-gray-600"></p>
+        </div>
+        <button id="closeNotificationBtn" class="ml-auto text-gray-400 hover:text-gray-600">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+</div>
+
+<script>
+    const baseUrl = 'http://localhost:8080';
+    let currentBookId = null;
+
+    // DOM元素
+    const bookListElement = document.getElementById('bookList');
+    const detailCard = document.getElementById('detailCard');
+    const bookDetailElement = document.getElementById('bookDetail');
+    const addBookForm = document.getElementById('addBookForm');
+    const addBookResult = document.getElementById('addBookResult');
+    const manageBookForm = document.getElementById('manageBookForm');
+    const manageBookResult = document.getElementById('manageBookResult');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const notification = document.getElementById('notification');
+    const notificationTitle = document.getElementById('notificationTitle');
+    const notificationMessage = document.getElementById('notificationMessage');
+    const notificationIcon = document.getElementById('notificationIcon');
+    const closeNotificationBtn = document.getElementById('closeNotificationBtn');
+    const closeDetailBtn = document.getElementById('closeDetailBtn');
+    const searchInput = document.getElementById('searchInput');
+    const loadBookForManageBtn = document.getElementById('loadBookForManageBtn');
+    const updateBookButton = document.getElementById('updateBookButton');
+    const deleteBookButton = document.getElementById('deleteBookButton');
+    const getBooksButton = document.getElementById('getBooksButton');
+
+    // 初始化页面
+    document.addEventListener('DOMContentLoaded', () => {
+        // 添加事件监听器
+        getBooksButton.addEventListener('click', fetchAndRenderBooks);
+        addBookForm.addEventListener('submit', handleAddBook);
+        closeDetailBtn.addEventListener('click', () => detailCard.style.display = 'none');
+        loadBookForManageBtn.addEventListener('click', loadBookForManage);
+        updateBookButton.addEventListener('click', handleUpdateBook);
+        deleteBookButton.addEventListener('click', handleDeleteBook);
+        closeNotificationBtn.addEventListener('click', hideNotification);
+        searchInput.addEventListener('input', handleSearch);
+
+        // 初始加载图书列表
+        fetchAndRenderBooks();
+    });
+
+    // 显示/隐藏加载中
+    function showLoading() {
+        loadingOverlay.classList.remove('hidden');
+    }
+
+    function hideLoading() {
+        loadingOverlay.classList.add('hidden');
+    }
+
+    // 显示通知
+    function showNotification(title, message, type = 'info') {
+        notificationTitle.textContent = title;
+        notificationMessage.textContent = message;
+
+        // 设置图标和颜色
+        notificationIcon.className = '';
+        if (type === 'success') {
+            notificationIcon.className = 'fa fa-check-circle text-success mr-3 text-xl';
+        } else if (type === 'error') {
+            notificationIcon.className = 'fa fa-exclamation-circle text-danger mr-3 text-xl';
+        } else if (type === 'warning') {
+            notificationIcon.className = 'fa fa-exclamation-triangle text-warning mr-3 text-xl';
+        } else {
+            notificationIcon.className = 'fa fa-info-circle text-info mr-3 text-xl';
+        }
+
+        // 显示通知
+        notification.classList.remove('translate-x-full', 'opacity-0');
+        notification.classList.add('translate-x-0', 'opacity-100');
+
+        // 3秒后自动隐藏
+        setTimeout(hideNotification, 3000);
+    }
+
+    // 隐藏通知
+    function hideNotification() {
+        notification.classList.remove('translate-x-0', 'opacity-100');
+        notification.classList.add('translate-x-full', 'opacity-0');
+    }
+
+    // 处理搜索
+    function handleSearch() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const bookItems = document.querySelectorAll('#bookList .book-item');
+
+        bookItems.forEach(item => {
+            const title = item.querySelector('.book-title').textContent.toLowerCase();
+            const author = item.querySelector('.book-author').textContent.toLowerCase();
+
+            if (title.includes(searchTerm) || author.includes(searchTerm)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    // 获取并渲染图书列表
+    async function fetchAndRenderBooks() {
+        showLoading();
+        try {
+            const books = await fetchBooks();
+            renderBookList(books);
+            showNotification('成功', '图书列表已更新');
+        } catch (error) {
+            showNotification('错误', error.message, 'error');
+            console.error('获取图书列表失败:', error);
+        } finally {
+            hideLoading();
+        }
+    }
+
+    // API调用函数
+    async function fetchBooks() {
+        const response = await fetch(`${baseUrl}/books`);
+        if (!response.ok) {
+            throw new Error(`HTTP错误! 状态码: ${response.status}`);
+        }
+        return response.json();
+    }
+
+    async function addBook(book) {
+        const response = await fetch(`${baseUrl}/books`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(book)
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP错误! 状态码: ${response.status}`);
+        }
+        return response.json();
+    }
+
+    async function getBookDetail(bookId) {
+        const response = await fetch(`${baseUrl}/books/${bookId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP错误! 状态码: ${response.status}`);
+        }
+        return response.json();
+    }
+
+    async function updateBook(bookId, updatedBook) {
+        const response = await fetch(`${baseUrl}/books/${bookId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedBook)
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP错误! 状态码: ${response.status}`);
+        }
+        return response.json();
+    }
+
+    async function deleteBook(bookId) {
+        const response = await fetch(`${baseUrl}/books/${bookId}`, {
+            method: 'DELETE'
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP错误! 状态码: ${response.status}`);
+        }
+        return response.json();
+    }
+
+    // 渲染图书列表
+    function renderBookList(books) {
+        bookListElement.innerHTML = '';
+
+        if (books.length === 0) {
+            bookListElement.innerHTML = `
+                    <div class="text-gray-500 text-center py-10">
+                        <i class="fa fa-book text-gray-300 text-4xl mb-3"></i>
+                        <p>暂无图书数据</p>
+                    </div>
+                `;
+            return;
+        }
+
+        books.forEach(book => {
+            const bookItem = document.createElement('div');
+            bookItem.className = 'book-item bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer flex items-center';
+            bookItem.innerHTML = `
+                    <div class="flex-1">
+                        <h3 class="book-title font-medium text-gray-900">${book.title}</h3>
+                        <p class="book-author text-sm text-gray-600">作者: ${book.author}</p>
+                        <div class="flex items-center mt-1">
+                            <span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800">
+                                <i class="fa fa-bookmark-o mr-1"></i>库存: ${book.stock}
+                            </span>
+                            <span class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800 ml-2">
+                                <i class="fa fa-tag mr-1"></i>ID: ${book.id}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="ml-4 flex items-center">
+                        <button class="view-detail-btn text-primary hover:text-primary/80 mr-3" data-id="${book.id}">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                        <button class="edit-book-btn text-warning hover:text-warning/80" data-id="${book.id}">
+                            <i class="fa fa-pencil"></i>
+                        </button>
+                    </div>
+                `;
+            bookListElement.appendChild(bookItem);
+
+            // 添加查看详情事件
+            bookItem.querySelector('.view-detail-btn').addEventListener('click', () => {
+                viewBookDetail(book.id);
+            });
+
+            // 添加编辑事件
+            bookItem.querySelector('.edit-book-btn').addEventListener('click', () => {
+                document.getElementById('bookIdForManage').value = book.id;
+                loadBookForManage();
+            });
+        });
+    }
+
+    // 查看图书详情
+    async function viewBookDetail(bookId) {
+        showLoading();
+        try {
+            const book = await getBookDetail(bookId);
+            renderBookDetail(book);
+            detailCard.style.display = 'block';
+        } catch (error) {
+            showNotification('错误', error.message, 'error');
+            console.error('获取图书详情失败:', error);
+        } finally {
+            hideLoading();
+        }
+    }
+
+    // 渲染图书详情
+    function renderBookDetail(book) {
+        bookDetailElement.innerHTML = `
+                <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div class="w-32 h-48 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400">
+                        <i class="fa fa-book text-5xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-gray-900">${book.title}</h3>
+                        <p class="text-gray-600 mt-1">作者: ${book.author}</p>
+                        <div class="mt-3 grid grid-cols-2 gap-2">
+                            <div class="bg-gray-50 p-3 rounded-lg">
+                                <span class="text-xs text-gray-500">图书ID</span>
+                                <p class="font-medium">${book.id}</p>
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded-lg">
+                                <span class="text-xs text-gray-500">库存数量</span>
+                                <p class="font-medium">${book.stock}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <h4 class="font-medium text-gray-900 mb-2">操作</h4>
+                    <div class="flex gap-3">
+                        <button class="edit-detail-btn bg-warning hover:bg-warning/90 text-white px-4 py-2 rounded-lg flex items-center btn-hover" data-id="${book.id}">
+                            <i class="fa fa-pencil mr-2"></i>编辑
+                        </button>
+                        <button class="delete-detail-btn bg-danger hover:bg-danger/90 text-white px-4 py-2 rounded-lg flex items-center btn-hover" data-id="${book.id}">
+                            <i class="fa fa-trash mr-2"></i>删除
+                        </button>
+                    </div>
+                </div>
+            `;
+
+        // 添加编辑按钮事件
+        document.querySelector('.edit-detail-btn').addEventListener('click', () => {
+            document.getElementById('bookIdForManage').value = book.id;
+            loadBookForManage();
+            detailCard.style.display = 'none';
+        });
+
+        // 添加删除按钮事件
+        document.querySelector('.delete-detail-btn').addEventListener('click', () => {
+            if (confirm(`确定要删除图书 "${book.title}" 吗？`)) {
+                handleDeleteBook(book.id);
+                detailCard.style.display = 'none';
+            }
+        });
+    }
+
+    // 加载图书信息用于管理
+    async function loadBookForManage() {
+        const bookId = document.getElementById('bookIdForManage').value.trim();
+        if (!bookId) {
+            showNotification('提示', '请输入图书ID', 'warning');
+            return;
+        }
+
+        showLoading();
+        try {
+            const book = await getBookDetail(bookId);
+            document.getElementById('manageBookTitle').value = book.title;
+            document.getElementById('manageBookAuthor').value = book.author;
+            document.getElementById('manageBookStock').value = book.stock;
+            manageBookForm.style.display = 'block';
+            currentBookId = bookId;
+            showNotification('成功', `已加载图书 "${book.title}" 的信息`);
+        } catch (error) {
+            manageBookForm.style.display = 'none';
+            showNotification('错误', error.message, 'error');
+            console.error('加载图书信息失败:', error);
+        } finally {
+            hideLoading();
+        }
+    }
+
+    // 处理添加图书
+    async function handleAddBook(e) {
+        e.preventDefault();
+
+        const newBook = {
+            id: document.getElementById('newBookId').value.trim(),
+            title: document.getElementById('newBookTitle').value.trim(),
+            author: document.getElementById('newBookAuthor').value.trim(),
+            stock: parseInt(document.getElementById('newBookStock').value) || 0
+        };
+
+        // 验证
+        if (!newBook.id) {
+            showNotification('提示', '图书ID不能为空', 'warning');
+            return;
+        }
+
+        if (!newBook.title) {
+            showNotification('提示', '图书标题不能为空', 'warning');
+            return;
+        }
+
+        if (!newBook.author) {
+            showNotification('提示', '图书作者不能为空', 'warning');
+            return;
+        }
+
+        showLoading();
+        try {
+            const result = await addBook(newBook);
+            showNotification('成功', `图书 "${newBook.title}" 添加成功`);
+
+            // 重置表单
+            addBookForm.reset();
+
+            // 刷新图书列表
+            fetchAndRenderBooks();
+        } catch (error) {
+            showNotification('错误', error.message, 'error');
+            console.error('添加图书失败:', error);
+        } finally {
+            hideLoading();
+        }
+    }
+
+    // 处理更新图书
+    async function handleUpdateBook() {
+        if (!currentBookId) {
+            showNotification('提示', '请先加载要更新的图书', 'warning');
+            return;
+        }
+
+        const updatedBook = {
+            title: document.getElementById('manageBookTitle').value.trim(),
+            author: document.getElementById('manageBookAuthor').value.trim(),
+            stock: parseInt(document.getElementById('manageBookStock').value) || 0
+        };
+
+        // 验证
+        if (!updatedBook.title) {
+            showNotification('提示', '图书标题不能为空', 'warning');
+            return;
+        }
+
+        if (!updatedBook.author) {
+            showNotification('提示', '图书作者不能为空', 'warning');
+            return;
+        }
+
+        showLoading();
+        try {
+            const result = await updateBook(currentBookId, updatedBook);
+            showNotification('成功', `图书信息更新成功`);
+
+            // 刷新图书列表
+            fetchAndRenderBooks();
+        } catch (error) {
+            showNotification('错误', error.message, 'error');
+            console.error('更新图书失败:', error);
+        } finally {
+            hideLoading();
+        }
+    }
+
+    // 处理删除图书
+    async function handleDeleteBook(bookId = null) {
+        const idToDelete = bookId || currentBookId;
+
+        if (!idToDelete) {
+            showNotification('提示', '请先加载要删除的图书', 'warning');
+            return;
+        }
+
+        // 获取图书标题用于确认
+        const bookTitle = document.getElementById('manageBookTitle').value.trim() || idToDelete;
+
+        if (!confirm(`确定要删除图书 "${bookTitle}" 吗？`)) {
+            return;
+        }
+
+        showLoading();
+        try {
+            const result = await deleteBook(idToDelete);
+            showNotification('成功', `图书 "${bookTitle}" 已删除`);
+
+            // 重置表单
+            if (!bookId) {
+                document.getElementById('bookIdForManage').value = '';
+                manageBookForm.style.display = 'none';
+                currentBookId = null;
+            }
+
+            // 刷新图书列表
+            fetchAndRenderBooks();
+        } catch (error) {
+            showNotification('错误', error.message, 'error');
+            console.error('删除图书失败:', error);
+        } finally {
+            hideLoading();
+        }
+    }
+</script>
+</body>
+</html>
